@@ -1,10 +1,10 @@
 {
 	"info": {
-		"_postman_id": "78fc11e4-ff89-435b-a2f6-86c96473790c",
+		"_postman_id": "5b1d374a-c750-4a46-b58a-51333f908eb8",
 		"name": "TesteServeRest",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "46560955",
-		"_collection_link": "https://ebac22-2978.postman.co/workspace/Estudos-EBAC~27fed35a-0107-4b88-9c9b-1c711df34e75/collection/46560955-78fc11e4-ff89-435b-a2f6-86c96473790c?action=share&source=collection_link&creator=46560955"
+		"_collection_link": "https://ebac22-2978.postman.co/workspace/Estudos-EBAC~27fed35a-0107-4b88-9c9b-1c711df34e75/collection/46560955-5b1d374a-c750-4a46-b58a-51333f908eb8?action=share&source=collection_link&creator=46560955"
 	},
 	"item": [
 		{
@@ -17,11 +17,12 @@
 							"listen": "test",
 							"script": {
 								"exec": [
-									"pm.test(\"Validar mensagem de sucesso\", function () {\r",
-									"    pm.expect(pm.response.text()).to.include(\"Cadastro realizado com sucesso\");\r",
-									"});\r",
-									"pm.test(\"Status code is 201\", function () {\r",
-									"    pm.response.to.have.status(201);\r",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"pm.test(\"A resposta contém o campo produtos\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData).to.have.property(\"quantidade\");",
 									"});"
 								],
 								"type": "text/javascript",
@@ -29,9 +30,6 @@
 							}
 						}
 					],
-					"protocolProfileBehavior": {
-						"disableBodyPruning": true
-					},
 					"request": {
 						"auth": {
 							"type": "bearer",
@@ -45,15 +43,6 @@
 						},
 						"method": "GET",
 						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n  \"quantidade\": 2,\r\n  \"produtos\": [\r\n    {\r\n      \"nome\": \"Logitech MX Vertical\",\r\n      \"preco\": 470,\r\n      \"descricao\": \"Mouse\",\r\n      \"quantidade\": 381,\r\n      \"_id\": \"BeeJh5lz3k6kSIzA\"\r\n    },\r\n    {\r\n      \"nome\": \"Samsung 60 polegadas\",\r\n      \"preco\": 5240,\r\n      \"descricao\": \"TV\",\r\n      \"quantidade\": 49977,\r\n      \"_id\": \"K6leHdftCeOJj8BJ\"\r\n    }\r\n  ]\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
 						"url": {
 							"raw": "http://localhost:3000/produtos/",
 							"protocol": "http",
@@ -73,24 +62,12 @@
 		},
 		{
 			"name": "Listar Usuarios",
-			"protocolProfileBehavior": {
-				"disableBodyPruning": true
-			},
 			"request": {
 				"auth": {
 					"type": "noauth"
 				},
 				"method": "GET",
 				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\r\n  \"quantidade\": 2,\r\n  \"produtos\": [\r\n    {\r\n      \"nome\": \"Logitech MX Vertical\",\r\n      \"preco\": 470,\r\n      \"descricao\": \"Mouse\",\r\n      \"quantidade\": 381,\r\n      \"_id\": \"BeeJh5lz3k6kSIzA\"\r\n    },\r\n    {\r\n      \"nome\": \"Samsung 60 polegadas\",\r\n      \"preco\": 5240,\r\n      \"descricao\": \"TV\",\r\n      \"quantidade\": 49977,\r\n      \"_id\": \"K6leHdftCeOJj8BJ\"\r\n    }\r\n  ]\r\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
 				"url": {
 					"raw": "http://localhost:3000/usuarios/J1BbPoK2SKHiyqNz",
 					"protocol": "http",
@@ -108,6 +85,28 @@
 		},
 		{
 			"name": "Criar Usuario",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Código de status é 201\", function () {",
+							"    pm.response.to.have.status(201);",
+							"});",
+							"pm.test(\"Mensagem de sucesso exibida\", function () {",
+							"    pm.expect(pm.response.json().message).to.eql(\"Cadastro realizado com sucesso\");",
+							"});",
+							"pm.test(\"Resposta contém ID do usuário\", function() {",
+							"    pm.expect(pm.response.json()).to.have.property(\"_id\");",
+							"});",
+							"",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
 			"request": {
 				"auth": {
 					"type": "noauth"
@@ -116,7 +115,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n  \"nome\": \"João Pedro\",\r\n  \"email\": \"jpm@qa.com.br\",\r\n  \"password\": \"1234509\",\r\n  \"administrador\": \"true\"\r\n}",
+					"raw": "{\n  \"nome\": \"Maria Teste\",\n  \"email\": \"{{$randomEmail}}\",\n  \"password\": \"teste123\",\n  \"administrador\": \"true\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -201,18 +200,15 @@
 				}
 			],
 			"request": {
-				"auth": {
-					"type": "bearer",
-					"bearer": [
-						{
-							"key": "token",
-							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImpwbUBxYS5jb20uYnIiLCJwYXNzd29yZCI6IjEyMzQ1MDkiLCJpYXQiOjE3NTI2MjI0MzksImV4cCI6MTc1MjYyMzAzOX0.7ZrJNgysieo6Y3BVIrZSXzHcEhLMpdIQ3rEZ2FbUtlA",
-							"type": "string"
-						}
-					]
-				},
 				"method": "POST",
-				"header": [],
+				"header": [
+					{
+						"key": "",
+						"value": "",
+						"type": "text",
+						"disabled": true
+					}
+				],
 				"body": {
 					"mode": "raw",
 					"raw": "{\r\n  \"nome\": \"Peneira de Madeira \",\r\n  \"preco\": 50,\r\n  \"descricao\": \"Peneira\",\r\n  \"quantidade\": 5000\r\n}",
@@ -249,7 +245,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n  \"nome\": \"Peneira de Madeira v3 \",\r\n  \"preco\": 900,\r\n  \"descricao\": \"Peneira\",\r\n  \"quantidade\": 500\r\n}",
+					"raw": "{\r\n  \"nome\": \"Peneira de Madeira v4 \",\r\n  \"preco\": 900,\r\n  \"descricao\": \"Peneira\",\r\n  \"quantidade\": 500\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -257,11 +253,12 @@
 					}
 				},
 				"url": {
-					"raw": "{{local}}produtos/TPbxXs21LuZacpBX",
+					"raw": "{{local}}/produtos/TPbxXs21LuZacpBX",
 					"host": [
-						"{{local}}produtos"
+						"{{local}}"
 					],
 					"path": [
+						"produtos",
 						"TPbxXs21LuZacpBX"
 					]
 				}
@@ -288,50 +285,30 @@
 				}
 			],
 			"request": {
-				"auth": {
-					"type": "bearer",
-					"bearer": [
-						{
-							"key": "token",
-							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImpwbUBxYS5jb20uYnIiLCJwYXNzd29yZCI6IjEyMzQ1MDkiLCJpYXQiOjE3NTI2MjI2NjYsImV4cCI6MTc1MjYyMzI2Nn0.bRhZzkaaY_aZDue58vC8tf9GOiDhCdVaACtmLg-Ue48",
-							"type": "string"
-						}
-					]
-				},
 				"method": "DELETE",
-				"header": [],
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "{{token}}",
+						"type": "text"
+					}
+				],
 				"body": {
 					"mode": "raw",
 					"raw": "{\r\n  \"nome\": \"Peneira de Madeira v2 \",\r\n  \"preco\": 900,\r\n  \"descricao\": \"Peneira\",\r\n  \"quantidade\": 500\r\n}"
 				},
 				"url": {
-					"raw": "{{local}}produtos/RxC1gJRag4ThOTyz",
+					"raw": "{{local}}/produtos/Jd4SFXYdCXILzAxw",
 					"host": [
-						"{{local}}produtos"
+						"{{local}}"
 					],
 					"path": [
-						"RxC1gJRag4ThOTyz"
+						"produtos",
+						"Jd4SFXYdCXILzAxw"
 					]
 				}
 			},
 			"response": []
-		}
-	],
-	"variable": [
-		{
-			"key": "vcml",
-			"value": "",
-			"type": "default"
-		},
-		{
-			"key": "Codigo",
-			"value": "",
-			"type": "default"
-		},
-		{
-			"key": "llll",
-			"value": "",
-			"type": "default"
 		}
 	]
 }
